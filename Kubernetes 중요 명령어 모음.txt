@@ -1,0 +1,329 @@
+$$$$$$ 제일 많이 사용하는 Kubernetes 명령어 $$$$$$
+
+kubectl get pod -n kube-system
+kubectl get nodes
+kubectl get nodes -o wide
+kubectl get pod --all-namespaces
+kubectl apply -f obj.yaml 
+kubectl delete -f obj.yaml 
+kubectl create deployment demo-deployment --image=nginx:1.14 # 1개를 만든다
+kubectl create deployment demo-deployment --image=nginx:1.14 --replicas=5 # 5개를 한번에 만들어라
+kubectl scale deployment demo-deployment --replicas=10 # 10개로 늘려라
+kubectl get deployment
+kubectl get deployment.apps demo-deployment -o yaml
+kubectl get deployment.apps demo-deployment -o yaml > demo-deployment.yaml # 컨테이너 설정파일
+cat(vi) demo-deployment.yaml 
+kubectl delete deployments.apps demo-deployment
+kubectl get po 
+kubectl get rs 
+kubectl get deploy
+watch kubectl get po
+
+kubectl delete pod pod-exam # 손자 삭제
+kubectl delete rs demo-deployment-6d8dbd56d7 # 아버지 삭제
+kubectl delete deploy demo-deployment # 할아버지 삭제
+
+kubectl cordon node3.example.com 
+kubectl drain node2.example.com
+kubectl get nodes
+kubectl uncordon node3.example.com
+kubectl drain node2.example.com --ignore-daemonsets
+kubectl delete nodes node3.example.com
+kubeadm token list
+kubeadm token create
+worker node 에서 설정
+# kubeadm reset
+
+kubeadm join --token 4gun4p.v..b 10.100.0.104:6443 --discovery-token-unsafe-skip-ca-verification 
+docker build -t hub.example.com/nginx . 
+docker push hub.example.com/nginx
+
+kubectl create deployment nginx --image=nginx1.14 
+kubectl expose deploy nginx --type=ClusterIP --port 80 
+
+docker version
+
+watch kubectl get pods -o wide
+kubectl drain nodeX.example.com --dry-run=client
+
+kubectl drain nodeX.example.com --ignore-daemonsets
+
+kubectl drain nodeX.example.com --force 
+kubectl uncordon nodeX.example.com 
+
+kubectl drain nodeX.example.com --ignore-daemonsets 
+kubectl delete node nodeX.example.com 
+
+kubectl logs multipod -c nginx-container 
+
+kubectl get pods --show-labels
+kubectl get pod -L <label_type>
+
+kubectl get pod
+kubectl get pod --show-labels 
+
+kubectl label pod redis-pod app=db 
+
+kubectl label pod nginx-pod app=web-services type=frontend 
+kubectl label po label-pod app=web-services --overwrite 
+kubectl get pod --show-labels 
+kubectl get pod -L app,type 
+
+kubectl get nodes --show-labels
+kubectl get nodes -L beta.kubernetes.io/arch 
+kubectl delete pod nodeselector-pod 
+kubectl label node node2.example.com ssd-
+kubectl create -f pod-nodeselector.yaml
+
+kubectl label node node1.example.com ssd=true
+kubectl get pods nodeselector-pod -o wide
+
+kubectl describe pod nginx-pod 
+kubectl delete pod testpod
+kubectl delete pod -l release=canary
+kubectl create -f pod-liveness.yaml 
+kubectl describe pod liveness-pod
+
+kubectl get pod testpod
+kubectl get pod testpod -o yaml 
+kubectl get pod testpod -o json 
+
+kubectl logs testpod
+kubectl logs testpod -c appjs-container
+
+kubectl port-forward testpod 8888:8080 
+curl localhost:8888
+
+kubectl label pod testpod2 env=debug --overwrite 
+kubectl get po -L app,env 
+kubectl get po -l app=hpe 
+kubectl get po -l '!env' 
+
+# kubectl delete pod test-gpu 
+
+2.label selectors 를 사용하여 포드 삭제하기
+# kubectl delete po -l app=hpe
+
+3.모든 포드 삭제하기
+# kubectl delete po --all 
+
+kubectl get rc
+kubectl get pods
+kubectl get pods -o wide
+
+kubectl delete pod nginx-rc-jm99k 
+kubectl delete replictioncontroller nginx-rc 
+kubectl edit replicationcontroller nginx-rc
+
+kubectl create -f rs-nginx.yaml
+
+kubectl get rs
+
+kubectl get pods 
+kubectl describe pod rs-nginx-XXXX
+
+kubectl get all
+
+kubectl scale deployment nginx-deploy --replicas=2
+kubectl delete deployments.apps nginx-deploy 
+kubectl get daemonsets.apps -n kube-system 
+kubectl get daemonsets.apps -n kube-system 
+kubectl get pods -n kube-system -o wide | grep -e proxy -e weave 
+kubectl get pod -o wide 
+kubectl get daemonsets.apps 
+kubectl edit daemonsets.apps fluentd
+
+kubectl rollout history daemonset 
+kubectl rollout undo daemonset fluentd
+kubectl rollout status daemonset fluentd 
+kubectl describe pod fluentd-<NEWID> 
+kubectl delete daemonsets.apps fluentd 
+kubectl apply -f job-centos.yaml 
+kubectl get pods --watch
+kubectl get events
+
+kubectl create deployment my-first-deploy --image=nginx:1.14
+kubectl scale deployment my-first-deploy  --replicas=2
+kubectl get pods
+kubectl get pods -o wide
+kubectl describe replicaset my-first-deploy-zzz 
+kubectl get deployment
+kubectl expose deployment my-first-deploy --port=80 --type=NodePort
+kubectl get svc
+kubectl describe svc my-first-deploy 
+kubectl delete deployment my-first-deploy
+kubectl delete svc my-first-deploy 
+kubectl create -f replicationcontroller-definition.yaml 
+watch kubectl get pods 
+kubectl get rc 
+kubectl describe rc myapp 
+kubectl get pod --show-labels
+kubectl label pod myapp-rc-XXX app=nginx --overwrite 
+kubectl get pods --show-labels
+kubectl get pod -L app,type 
+kubectl scale rc myapp-rc --replicas=5	
+kubectl edit rc myapp-rc
+kubectl scale rc myapp-rc --replicas=3 
+kubectl get pods -L app
+kubectl describe pod myapp-rc-xxx
+kubectl get rs 
+kubectl get pods -L app,type 
+kubectl delete rs myapp-rs
+kubectl delete pod --all
+
+1.특정 노드에 다음 라벨을 추가한다.
+kubectl label nodes node1.example.com ssd=true
+kubectl label nodes node3.example.com ssd=true
+2.노드가 설정되었는지 확인한다.
+kubectl get nodes --selector ssd=true
+
+kubectl get node --show-labels
+kubectl get nodes -L ssd
+
+kubectl label nodes node1.example.com ssd
+kubectl get pods -o wide
+
+kubectl get pod -o wide
+kubectl get svc
+iptables -t nat -S | grep 80 
+
+kubectl get pod --show-labels -o wide
+kubectl get svc 
+kubectl describe svc appjs-service
+
+kubectl get endpoints
+kubectl describe svc my-service 
+
+cp svc-appjs.yaml svc-node.yaml  
+cat svc-node.yaml 
+
+systemctl start nginx && systemctl enable nginx
+systemctl status nginx
+
+station 시스템에 방화벽이 운영중이라면 아래와 같이 방화벽을 해제하고 또한 SELinux 설정도 해야한다.
+firewall-cmd --add-service=http
+firewall-cmd --add-service=http --permanent 
+
+setsebool -P httpd_can_network_connect 1
+
+systemctl restart nginx
+
+1.현재 클러스터가 CoreDNS 를 사용하고 있는지 확인하려면 다음 명령을 실행한다.
+kubectl get pod -n kube-system -l k8s-app=kube-dns
+kubectl get service
+2.Pod 의 컨테이너 안에서 curl 명령을 사용하여 서비스 이름 질의가 가능한지 확인하자.
+kubectl exec -it centos-pod -- /bin/bash
+
+kubectl expose deploy ev237 --port 80
+kubectl get service 
+kubectl get endpoints
+
+kubectl edit service ev237 
+
+cp rs-appjs.yaml readiness-appjs.yaml 
+vim readiness-appjs.yaml 
+
+kubectl get namespaces
+
+3.해당 Pod 를 종료하고 yaml 파일을 수정하여 cpu request 를 1core 로 변경하자.
+
+kubectl delete pod nginx-pod-request 
+vim nginx-pod-request.yaml 
+kubectl create -f nginx-pod-request.yaml
+kubectl get pods
+ 
+1.다음 명령을 수행하여 네임스페이스 목록을 확인한다.
+
+# kubectl get ns 
+
+
+2.Let’s look at the pods that belong to the kube-system namespace:
+# kubectl get pod --namespace kube-system 
+
+
+3.다음 명령을 사용하여 네임스페이스를 생성한다.
+# kubectl create namespace custom-namespace 
+
+
+4.다른 네임스페이스에 리소스를 배포해보자.
+# kubectl create -f testpod.yaml -n custom-namespace 
+# kubectl get namespaces
+
+
+5.생성한 namespace 를 제거 하자.
+# kubectl delete namespace custom
+
+kubectl get pod -o wide --watch
+
+실행중인 deploy stressful 을 제거하자
+kubectl delete deployments.apps stressful
+
+kubectl get pod -n ingress-nginx
+
+설치된 ingress controller 의 버전을 확인해보자
+kubectl exec -n ingress-nginx ingress-nginx-controller-69fb496d7d-hrmrb -- /nginx-ingress-controller --version 
+kubectl get svc -n ingress-nginx
+
+kubectl config current-context 
+kubectl config set-context ingress-nginx --namespace=ingress-nginx --cluster=kubernetes --user=kubernetes-admin
+kubectl config view
+
+namespace 를 default 대신 ingress-nginx 로 변경한다.
+kubectl config use-context ingress-nginx
+kubectl config current-context 
+
+dynamic-web Pod 내의 web-server 컨테이너의 마운트 디렉토리를 사용해보자.
+touch 명령으로 파일을 생성할 수 있는가?
+kubectl exec dynamic-web -c web-server -- ls /usr/share/nginx/html 
+kubectl exec dynamic-web -c web-server -- touch /usr/share/nginx/html/test.html
+
+kubectl get pods -o wide -n kube-system 
+
+fluentd 포드에 들어가서 실제로 거기에 로그가 쌓이고 있는지 확인해보자.
+kubectl exec -n kube-system -it fluentd-elasticsearch-2dqfp -- bash 
+ls /var/log 
+ls /var/lib/docker/containers 
+exit
+ 
+
+kubectl create -f pv1.yaml -f pv2.yaml -f pv3.yaml -f pv4.yaml
+kubectl get pv
+kubectl create -f pvc.yaml
+kubectl get pvc
+
+kubectl create -f pod-mongodb.yaml 
+kubectl exec -it mongodb-pod -- mongo 
+
+Pod 를 지우고 다시 생성하면 PVC 로 연결된 볼륨의 데이터가 유지되는가?
+kubectl delete pod mongodb-pod 
+kubectl delete pvc mongo-pvc 
+
+kubectl get pv,pvc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
