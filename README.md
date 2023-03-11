@@ -1,4 +1,32 @@
 # 멘토링
+## 2023-03-11(토)
+- 쿠버네티스
+1. 하이퍼바이저 플랫폼: 가상화를 지원하려면 필요함
+2. 클라우드 네이티브: 컨테이너 기반에서 개발, 운영, 배포를 한다. (클라우드 와의 차이점 알아두면 좋음)
+3. IAAS 
+4. 컨테이너 기반에서 개발을 해 봤습니다. 써보면 좋음.
+5. kublet: c advisor monitoring이 있음.
+
+```bash
+kubectl config use-context k8s
+kubectl get nodes
+kubectl get nodes -o wide
+kubectl describe nodes k8s-worker1
+kubectl get pod --all-namespaces
+
+watch kubectl get pods -o wide
+kubectl describe pods web
+kubectl run web2 --image=nginx:1.14
+kubectl run web3 --image=nginx:1.15 --dry-run=client -o yaml > webserver3.yaml
+kubectl run web3 --image=nginx:1.15 --dry-run=client -o json
+
+# yaml 파일 수정해서 컨테이너를 생성하고 삭제를 한다.
+kubectl apply -f webserver3.yaml
+kubectl delete -f webserver3.yaml
+
+```
+
+
 ## 2023-03-04(토)
 - 쿠버네티스
 1. 도커 컨테이너 배포를 자동화시킬 수 있음.
